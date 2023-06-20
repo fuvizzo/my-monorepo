@@ -1,0 +1,11 @@
+name: Merge to dev/hotfix branch
+on:
+  push:
+    branches:
+      - dev
+      - hotfix
+
+jobs:
+  run-tests:
+    uses: ./.github/workflows/shared.yml
+    secrets: inherit
