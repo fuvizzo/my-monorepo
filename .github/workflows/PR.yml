@@ -1,0 +1,16 @@
+name: Pull request to master/hotfix branch - regression tests & build:pre
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches:
+      - main
+      - hotfix
+
+jobs:
+  pr:
+    name: "Pull request"
+    uses: ./.github/workflows/shared.yml
+    secrets: inherit
+    with:
+      environment: pre

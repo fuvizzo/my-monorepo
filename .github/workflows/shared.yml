@@ -1,0 +1,52 @@
+name: Pull request - regression tests & build
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        required: false
+        type: string
+
+jobs:
+  run-tests:
+    name: Run tests ${{ github.event_name == 'pull_request' && format('and build({0} environment)', inputs.environment) || '' }}
+    runs-on: [self-hosted, standard, default]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "16.19.x"
+          registry-url: "https://npm.pkg.github.com"
+          scope: "@seatcode"
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.PACKAGE_GITHUB_TOKEN }}
+
+      - name: Tests
+        run: |
+          echo "Start regression tests"
+
+      # - name: SonarCloud Scan
+      #   uses: SonarSource/sonarcloud-github-action@master
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Needed to get PR information, if any
+      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+      # - name: Build
+      #   if: github.event_name == 'pull_request' && inputs.environment != ''
+      #   run: yarn run build:${{inputs.environment}}
+      #   env:
+      #     CI: false

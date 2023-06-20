@@ -1,0 +1,34 @@
+name: Check Pull request title
+
+on:
+  pull_request:
+    types: [edited, opened, synchronize, reopened]
+    branches:
+      - main
+      - hotfix
+      - prod      
+
+jobs:
+  check-pr-title:
+    name: "Check PR title"
+    runs-on: [self-hosted, standard, default]   
+    steps:
+      - uses: actions/github-script@v6
+        with:
+          script: |            
+            const title = context.payload.pull_request.title;
+            let regexp, err;
+            const prodTargetBranch = context.payload.pull_request.base.ref === 'prod';
+            if(prodTargetBranch) {
+              regexp = /^Release to PROD \(v[0-9]+.[0-9]+.[0-9]+\)$/g;
+              err = 'It must be in the form of "Release to PROD (vX.Y.Z)" with X,Y and Z being integer numbers';
+            }
+            else {
+              regexp = /^(\[((ZENIT-[0-9]+)|(NO JIRA))\])\ .{5,}/g;
+              err = 'It must be prefixed with "[NO JIRA] " or "[ZENIT-<int>] " with <int> being an integer number.';
+            }
+
+            if(!title.match(regexp))
+              core.setFailed(`Wrong PR title. ${err}`);
+
+ 
