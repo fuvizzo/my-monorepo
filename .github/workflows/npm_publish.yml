@@ -1,21 +1,15 @@
-name: NPM publish
-
-# on:
-#   push:
-#     branches:
-#       - main
-
+name: Create PR with updated packages version (chnagesets)
 on:
-  pull_request:
-    types: [edited, opened, synchronize, reopened]
-    branches: 
+  push:
+    branches:
       - main
+
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
 jobs:
   release:
-    name: Release
+    name: Prepare for release
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
