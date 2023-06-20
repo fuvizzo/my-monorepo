@@ -1,8 +1,14 @@
 name: NPM publish
 
+# on:
+#   push:
+#     branches:
+#       - main
+
 on:
-  push:
-    branches:
+  pull_request:
+    types: [edited, opened, synchronize, reopened]
+    branches: 
       - main
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
