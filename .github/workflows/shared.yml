@@ -10,7 +10,7 @@ on:
 jobs:
   run-tests:
     name: Run tests ${{ github.event_name == 'pull_request' && format('and build({0} environment)', inputs.environment) || '' }}
-    runs-on: [self-hosted, standard, default]
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
