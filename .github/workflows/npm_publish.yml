@@ -42,7 +42,7 @@ jobs:
           publish: pnpm --filter "./packages/**" publish #we can use also pnpm publish -r 
         
         env:
-          GITHUB_TOKEN: ${{ secrets.PACKAGE_GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       # - name: Send a Slack notification if a publish happens
