@@ -61,7 +61,7 @@ jobs:
   zenit_deploy:
     runs-on: ubuntu-latest
     needs: releasing
-    if: always() && needs.releasing.outputs.deploy_zenit == 'true'
+    if: needs.releasing.outputs.deploy_zenit == 'true'
     steps:
       - name: Deploy zenit
         run: |
