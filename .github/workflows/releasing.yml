@@ -5,7 +5,7 @@ on:
   #     - main
 
   pull_request:     
-    types: [closed]
+    types: [edited, opened, synchronize, reopened] # [closed]
     branches:
       - main
 
