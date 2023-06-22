@@ -1,4 +1,4 @@
-name: Pull request to master/hotfix branch - regression tests & build:pre
+name: Pull request to dev/hotfix branch - regression tests & build:pre
 
 on:
   pull_request:
