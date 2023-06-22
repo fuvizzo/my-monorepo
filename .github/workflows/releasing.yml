@@ -5,7 +5,7 @@ on:
   #     - main
 
   pull_request:     
-    types: [closed]
+    types: [edited, opened, synchronize, reopened] # [closed]
     branches:
       - main
 
@@ -14,10 +14,10 @@ concurrency: ${{ github.workflow }}-${{ github.ref }}
 jobs:
   releasing:
     name: Releasing
-    if: github.event.pull_request.merged == true
+    # if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     outputs:
-      deploy_zenit: ${{ steps.changesets.outputs.hasChangesets == 'false') # && steps.check_zenit_version_changes.outputs.any_changed == 'true' }} # map step output to
+      deploy_zenit: ${{ steps.changesets.outputs.hasChangesets == 'false' }} # && steps.check_zenit_version_changes.outputs.any_changed == 'true' }} # map step output to
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v3
