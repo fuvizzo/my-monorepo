@@ -1,0 +1,135 @@
+name: Create PR with updated packages version (changesets)
+on:
+  # push:
+  #   branches:
+  #     - main
+
+  pull_request:     
+    types: [closed]
+    branches:
+      - main
+
+concurrency: ${{ github.workflow }}-${{ github.ref }}
+
+jobs:
+  releasing:
+    name: Releasing
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    outputs:
+      deploy_zenit: ${{ steps.changesets.outputs.hasChangesets == 'false') # && steps.check_zenit_version_changes.outputs.any_changed == 'true' }} # map step output to
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "16.19.x"
+          registry-url: "https://npm.pkg.github.com"
+          scope: "@seatcode"
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.PACKAGE_GITHUB_TOKEN }}
+
+      - name: Create Release Pull Request or Publish to npm
+        id: changesets
+        uses: changesets/action@v1
+        with:
+          #   version: pnpm ci:version
+          commit: "chore: update versions"
+          title: "[NO JIRA] Release - update versions"
+          publish: pnpm --filter "./packages/**" publish #we can use also pnpm publish -r
+
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      # - name: Send a Slack notification if a publish happens
+      #   if: steps.changesets.outputs.published == 'true'
+      #   # You can do something when a publish happens.
+      #   run: my-slack-bot send-notification --message "A new version of ${GITHUB_REPOSITORY} was published!"
+
+      # if i'm able to check zenit/package.json has changed...
+      # - name: Check for zenit/package.json changes
+      #   uses: tj-actions/changed-files@v36.4.1
+      #   id: check_zenit_version_changes
+      #   with:
+      #     files: zenit/package.json
+
+  zenit_deploy:
+    runs-on: ubuntu-latest
+    needs: releasing
+    if: needs.releasing.outputs.deploy_zenit == 'true' && !contains(github.event.pull_request.labels.*.name, 'zenit no deploy')
+    steps:
+      - name: Deploy zenit
+        run: echo "deploy"
+      # - name: Checkout Repo
+      #   uses: actions/checkout@v3
+
+      # - uses: pnpm/action-setup@v2
+      #   with:
+      #     version: 8
+
+      # - name: Setup Node.js
+      #   uses: actions/setup-node@v3
+      #   with:
+      #     node-version: "16.19.x"
+      #     registry-url: "https://npm.pkg.github.com"
+      #     scope: "@seatcode"
+      #     cache: "pnpm"
+
+      # - name: Install dependencies
+      #   run: pnpm install
+      #   env:
+      #     NODE_AUTH_TOKEN: ${{ secrets.PACKAGE_GITHUB_TOKEN }}
+
+      # - name: build
+      #   run: pnpm --filter zenit build:prod
+      #   env:
+      #     CI: false
+
+      # - name: Configure CI Git User
+      #   run: |
+      #     git config --global user.name '${{ github.actor }}'
+      #     git config --global user.email '${{ github.actor }}@users.noreply.github.com'
+
+      # # - name: Create release with release notes
+      # #   id: create_release
+      # #   uses: ./.github/actions/create_release
+
+      # - name: Configure AWS Credentials
+      #   uses: aws-actions/configure-aws-credentials@v1
+      #   with:
+      #     aws-region: ${{ vars.AWS_DEFAULT_REGION }}
+      #     aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      #     aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+      # - name: Upload bundle in S3
+      #   run: aws s3 cp ./dist/${{ vars.ARTIFACT_NAME }} ${{ env.AWS_S3_BUNDLE_URI_PATH }}/${{ vars.ARTIFACT_NAME }}
+
+      # - name: Sync assets folder in S3
+      #   run: aws s3 sync ./assets/prod ${{ env.AWS_S3_BASE_PATH }}
+
+      # - name: Invalidate bundle cache
+      #   run: aws cloudfront create-invalidation --distribution-id ${{ vars.AWS_CLOUDFRONT_DISTRIBUTION_ID }} --paths "/${{ vars.AWS_S3_TARGET_FOLDER }}/*"
+
+      # # - name: Send release notes
+      # #   uses: ./.github/actions/send_release_notes
+      # #   with:
+      # #     github-token: ${{ secrets.PACKAGE_GITHUB_TOKEN }}
+      # #     aws-region: ${{ vars.AWS_DEFAULT_REGION }}
+      # #     aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      # #     aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      # #     sender-address: ${{ vars.RELEASE_NOTES_SENDER_ADDRESS }}
+      # #     receiver-addresses: ${{ vars.RELEASE_NOTES_RECEIVER_ADDRESSES }}
+      # #     cc-addresses: ${{ vars.RELEASE_NOTES_CC_ADDRESSES }}
+      # #     hide-details: ${{ vars.RELEASE_NOTES_HIDE_DETAILS }}
+
