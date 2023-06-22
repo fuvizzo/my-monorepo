@@ -1,0 +1,73 @@
+name: Staging - deploy to S3 stage environment
+on:
+  workflow_dispatch:
+  workflow_run:
+    workflows: ["Merge to dev/hotfix branch"]
+    types:
+      - completed
+    branches:
+      - dev
+      - hotfix
+
+env:
+  AWS_S3_BASE_PATH: s3://${{ vars.AWS_BUCKET }}/${{ vars.AWS_S3_TARGET_FOLDER }}
+
+jobs:
+  staging:
+    name: Staging
+    environment: stage
+    runs-on: [self-hosted, standard, default]
+
+    steps:
+      # - name: Debug Event
+      #   run: echo '${{ toJSON(github.event.workflow_run) }}'
+
+      - name: Create AWS_S3_BUNDLE_URI_PATH env var
+        run: |
+          echo "AWS_S3_BUNDLE_URI_PATH=${{ env.AWS_S3_BASE_PATH }}/runtime/dist" >> $GITHUB_ENV
+
+      - name: Check merge status
+        if: ${{!github.event.workflow_run.conclusion == 'success'}}
+        run: |
+          echo 'Something went wrong in the merging process'
+          exit = 1
+      - run: echo 'All the tests completed succesfully'
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "16.19.x"
+          registry-url: "https://npm.pkg.github.com"
+          scope: "@seatcode"
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.PACKAGE_GITHUB_TOKEN }}
+
+      - name: Build project
+        run: pnpm --filter "zenit" build
+        env:
+          CI: false
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-region: ${{ vars.AWS_DEFAULT_REGION }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+      - name: Upload bundle in S3
+        run: aws s3 cp ./dist/${{ vars.ARTIFACT_NAME }} ${{ env.AWS_S3_BUNDLE_URI_PATH }}/${{ vars.ARTIFACT_NAME }}
+
+      - name: Sync assets folder in S3
+        run: aws s3 sync ./assets/pre ${{ env.AWS_S3_BASE_PATH }}
