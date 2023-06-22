@@ -63,6 +63,10 @@ jobs:
       #   id: check_zenit_version_changes
       #   with:
       #     files: zenit/package.json
+      - name: Debug
+        run: |
+         echo ${{ steps.changesets.outputs.hasChangesets }}
+         echo ${{ !contains(github.event.pull_request.labels.*.name, 'zenit no deploy') }}
 
   zenit_deploy:
     runs-on: ubuntu-latest
