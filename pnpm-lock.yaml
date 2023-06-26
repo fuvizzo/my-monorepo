@@ -54,7 +54,7 @@ importers:
 
   apps/zenit:
     dependencies:
-      shared-ui:
+      '@fuvizzo/shared-ui':
         specifier: workspace:*
         version: link:../../packages/shared-ui
 
