@@ -1,5 +1,11 @@
 # shared-ui
 
+## 1.1.3
+
+### Patch Changes
+
+- b6fd7e2: Desc
+
 ## 1.1.2
 
 ### Patch Changes
