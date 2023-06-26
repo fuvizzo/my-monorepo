@@ -1,5 +1,12 @@
 # zenit
 
+## 0.0.5
+
+### Patch Changes
+
+- Updated dependencies [b6fd7e2]
+  - shared-ui@1.1.3
+
 ## 0.0.4
 
 ### Patch Changes
