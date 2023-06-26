@@ -46,7 +46,7 @@ jobs:
 
       - name: Creating .npmrc
         run: |
-          cat << EOF > "$HOME/.npmrc"
+          cat << EOF > "$GITHUB_WORKSPACE/.npmrc"
             @fuvizzo:registry=https://npm.pkg.github.com
             //https://npm.pkg.github.com/:_authToken=$NPM_TOKEN
           EOF
