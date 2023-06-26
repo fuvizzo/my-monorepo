@@ -1,5 +1,0 @@
----
-"shared-ui": major
----
-
-Desc
