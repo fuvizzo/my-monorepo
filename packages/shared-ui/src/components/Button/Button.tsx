@@ -6,7 +6,7 @@ interface ButtonProps {
 }
 
 export function Button(props: ButtonProps): ReactElement {
-  console.log("hello");
+  console.log("hello I'm a button");
   return <div>{props.children}</div>;
 }
 
