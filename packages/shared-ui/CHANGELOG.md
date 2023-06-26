@@ -1,5 +1,11 @@
 # shared-ui
 
+## 2.0.6
+
+### Patch Changes
+
+- 2ad6416: desc
+
 ## 2.0.5
 
 ### Patch Changes
