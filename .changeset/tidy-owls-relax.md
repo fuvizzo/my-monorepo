@@ -1,5 +1,0 @@
----
-"shared-ui": minor
----
-
-desc

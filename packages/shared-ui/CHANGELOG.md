@@ -1,5 +1,15 @@
 # shared-ui
 
+## 2.1.0
+
+### Minor Changes
+
+- 71aaea7: desc
+
+### Patch Changes
+
+- 71aaea7: desc
+
 ## 2.0.7
 
 ### Patch Changes
