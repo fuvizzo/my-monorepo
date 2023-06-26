@@ -22,14 +22,13 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v3
 
-      - name: Creating .npmrc in each packages
+      - name: Creating .npmrc
         run: |
-          bash ${GITHUB_WORKSPACE}/scripts/.npmrc-gen.sh $REGISTRY $NPM_TOKEN ${GITHUB_WORKSPACE}
-          cd 
-          ls -a ${GITHUB_WORKSPACE}/packages/shared-ui
-        env:          
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }} 
-          REGISTRY: "@fuvizzo:registry=https://npm.pkg.github.com"
+          cat << EOF > "$HOME/.npmrc"
+            //https://npm.pkg.github.com/:_authToken=$NPM_TOKEN
+          EOF
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - uses: pnpm/action-setup@v2
         with:
@@ -40,7 +39,7 @@ jobs:
         with:
           node-version: "16.19.x"
           registry-url: "https://npm.pkg.github.com"
-          # scope: "@seatcode"
+          scope: "@fuvizzo"
           cache: "pnpm"
 
       - name: Install dependencies
