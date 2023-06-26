@@ -39,13 +39,18 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
+      - name: Build Packages
+        run: pnpm --filter "./packages/**" build:prod
+        env:
+          CI: false  
+
       - name: Creating .npmrc
         run: |
           cat << EOF > "$HOME/.npmrc"
-            //https://npm.pkg.github.com/:_authToken=$NPM_TOKEN
+            //npm.pkg.github.com/:_authToken=$NPM_TOKEN
           EOF
         env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_TOKEN: ${{ secrets.GITHUB_TOKEN }}   
 
       - name: Create Release Pull Request or Publish to npm
         id: changesets
