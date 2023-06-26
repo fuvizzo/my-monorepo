@@ -10,7 +10,6 @@
       "import": "./dist/shared-ui.js"
     }
   },
-  "private": true,
   "version": "0.0.0",
   "scripts": {
     "dev": "vite",
