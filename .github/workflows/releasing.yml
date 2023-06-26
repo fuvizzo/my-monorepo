@@ -22,6 +22,15 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v3
 
+      - name: Creating .npmrc in each packages
+        run: |
+          bash ${GITHUB_WORKSPACE}/scripts/.npmrc-gen.sh $REGISTRY $NPM_TOKEN ${GITHUB_WORKSPACE}
+          cd 
+          ls -a ${GITHUB_WORKSPACE}/packages/shared-ui
+        env:          
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }} 
+          REGISTRY: "@fuvizzo:registry=https://npm.pkg.github.com"
+
       - uses: pnpm/action-setup@v2
         with:
           version: 8
@@ -44,14 +53,7 @@ jobs:
         env:
           CI: false
 
-      - name: Creating .npmrc in each packages
-        run: |
-          bash ${GITHUB_WORKSPACE}/scripts/.npmrc-gen.sh $REGISTRY $NPM_TOKEN ${GITHUB_WORKSPACE}
-          cd 
-          ls -a ${GITHUB_WORKSPACE}/packages/shared-ui
-        env:          
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }} 
-          REGISTRY: "@fuvizzo:registry=https://npm.pkg.github.com"
+     
 
       - name: Create Release Pull Request or Publish to npm
         id: changesets
