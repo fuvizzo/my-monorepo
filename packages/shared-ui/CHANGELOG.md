@@ -1,5 +1,11 @@
 # shared-ui
 
+## 1.1.1
+
+### Patch Changes
+
+- 4083364: Small changes
+
 ## 1.1.0
 
 ### Minor Changes
