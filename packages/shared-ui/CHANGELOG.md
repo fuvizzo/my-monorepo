@@ -1,5 +1,11 @@
 # shared-ui
 
+## 2.0.0
+
+### Major Changes
+
+- d83096a: Desc
+
 ## 1.1.3
 
 ### Patch Changes
