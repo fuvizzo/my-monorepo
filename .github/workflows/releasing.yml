@@ -4,7 +4,7 @@ on:
   #   branches:
   #     - main
 
-  pull_request:     
+  pull_request:
     types: [closed]
     branches:
       - main
@@ -20,7 +20,7 @@ jobs:
       deploy_zenit: ${{ steps.changesets.outputs.hasChangesets == 'false' }} # && steps.check_zenit_version_changes.outputs.any_changed == 'true' }} # map step output to
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v3                 
+        uses: actions/checkout@v3
 
       - uses: pnpm/action-setup@v2
         with:
@@ -42,18 +42,18 @@ jobs:
       - name: Build Packages
         run: pnpm --filter "./packages/**" build:prod
         env:
-          CI: false  
+          CI: false
 
       - name: Creating .npmrc
         run: |
-          cat << EOF > "$HOME/.npmrc"
+          cat << EOF > "${HOME}/.npmrc"
             @fuvizzo:registry=https://npm.pkg.github.com
             //npm.pkg.github.com/:_authToken=$NPM_TOKEN
             always-auth=true
           EOF
-        env:    
-          HOME: ${HOME}      
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}   
+          ls -a ${HOME}
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Create Release Pull Request or Publish to npm
         id: changesets
@@ -81,8 +81,8 @@ jobs:
       #     files: zenit/package.json
       - name: Debug
         run: |
-         echo ${{ steps.changesets.outputs.hasChangesets }}
-         echo ${{ !contains(github.event.pull_request.labels.*.name, 'zenit no deploy') }}
+          echo ${{ steps.changesets.outputs.hasChangesets }}
+          echo ${{ !contains(github.event.pull_request.labels.*.name, 'zenit no deploy') }}
 
   zenit_deploy:
     runs-on: ubuntu-latest
@@ -152,4 +152,3 @@ jobs:
       # #     receiver-addresses: ${{ vars.RELEASE_NOTES_RECEIVER_ADDRESSES }}
       # #     cc-addresses: ${{ vars.RELEASE_NOTES_CC_ADDRESSES }}
       # #     hide-details: ${{ vars.RELEASE_NOTES_HIDE_DETAILS }}
-
