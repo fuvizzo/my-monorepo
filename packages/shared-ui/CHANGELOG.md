@@ -1,5 +1,11 @@
 # shared-ui
 
+## 2.0.2
+
+### Patch Changes
+
+- 673caca: desc
+
 ## 2.0.1
 
 ### Patch Changes
