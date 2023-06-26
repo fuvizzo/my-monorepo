@@ -44,16 +44,14 @@ jobs:
         env:
           CI: false
 
-      - name: Creating .npmrc
+      - name: Creating .npmrc in each packages
         run: |
-          cat << EOF > "${HOME}/.npmrc"
-            @fuvizzo:registry=https://npm.pkg.github.com
-            //npm.pkg.github.com/:_authToken=$NPM_TOKEN
-            always-auth=true
-          EOF
-          ls -a ${HOME}
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          bash ${GITHUB_WORKSPACE}/scripts/.npmrc-gen.sh $REGISTRY $NPM_TOKEN ${GITHUB_WORKSPACE}
+          cd 
+          ls -a ${GITHUB_WORKSPACE}/packages/shared-ui
+        env:          
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }} 
+          REGISTRY: "@fuvizzo:registry=https://npm.pkg.github.com"
 
       - name: Create Release Pull Request or Publish to npm
         id: changesets
