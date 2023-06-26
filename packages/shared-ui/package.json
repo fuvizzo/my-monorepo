@@ -19,9 +19,6 @@
     "preview": "vite preview",
     "lib:publish": "pnpm publish"
   },
-  "publishConfig": {
-    "@fuvizzo:registry": "https://npm.pkg.github.com"
-  },
   "repository": {
     "type": "git",
     "url": "ssh://git@github.com/fuvizzo/my-monorepo.git",
