@@ -46,7 +46,7 @@ jobs:
 
       - name: Creating .npmrc
         run: |
-          echo -e "@fuvizzo:registry=https://npm.pkg.github.com \n//npm.pkg.github.com/:_authToken=$NPM_TOKEN \nalways-auth=true"> $HOME/.npmrc
+          echo -e "//npm.pkg.github.com/:_authToken=$NPM_TOKEN"> $HOME/.npmrc
 
         env:
           NPM_TOKEN: ${{ secrets.GITHUB_TOKEN }}
