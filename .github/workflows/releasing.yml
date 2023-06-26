@@ -44,10 +44,9 @@ jobs:
         env:
           CI: false     
 
-      - name: Creating .npmrc
+      - name: Creating .npmrc in each packages
         run: |
-          echo -e "@fuvizzo:registry=https://npm.pkg.github.com \n//npm.pkg.github.com/:_authToken=${{ secrets.NPM_AUTH_TOKEN }} \nalways-auth=true"> $GITHUB_WORKSPACE/.npmrc
-          ls -a
+          bash ${GITHUB_WORKSPACE}/scripts/.npmrc-gen.sh $NPM_TOKEN
         env:          
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}   
 
