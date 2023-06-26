@@ -52,20 +52,15 @@ jobs:
           commit: "chore: update versions"
           title: "[NO JIRA] Release - update versions"
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}    
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}         
 
-      - name: Creating Tags
-        run: |
-          npx changeset tag
-          git push --follow-tags
-        env:          
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }} 
-          REGISTRY: "@fuvizzo:registry=https://npm.pkg.github.com"     
-
-      - name: Publish packages
+      - name: Publish packages and create tags
         if: steps.changesets.outputs.hasChangesets == 'false'
         # You can do something when a publish should happen.
-        run: pnpm packages:publish
+        run: |
+          pnpm packages:publish
+          npx changeset tag
+          git push --follow-tags
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
