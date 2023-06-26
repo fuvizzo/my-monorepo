@@ -30,8 +30,8 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: "16.19.x"
-          # registry-url: "https://npm.pkg.github.com"
-          # scope: "@fuvizzo"
+          registry-url: "https://npm.pkg.github.com"
+          scope: "@fuvizzo"
           cache: "pnpm"
 
       - name: Install dependencies
@@ -42,15 +42,7 @@ jobs:
       - name: Build Packages
         run: pnpm --filter "./packages/**" build:prod
         env:
-          CI: false   
-
-      - name: Creating .npmrc
-        run: |
-          cat << EOF > "$HOME/.npmrc"
-            //registry.npmjs.org/:_authToken=$NPM_TOKEN
-          EOF
-        env:
-          NPM_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
+          CI: false    
 
       - name: Create Release Pull Request or Publish to npm
         id: changesets
@@ -59,11 +51,22 @@ jobs:
           #   version: pnpm ci:version
           commit: "chore: update versions"
           title: "[NO JIRA] Release - update versions"
-          publish: pnpm packages:publish #we can use also pnpm publish -r
-
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
+
+      - name: Creating .npmrc
+        run: |
+          cat << EOF > "$HOME/.npmrc"            
+            //npm.pkg.github.com/:_authToken=$GITHUB_TOKEN
+            always-auth=true
+          EOF
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}         
+
+      - name: Publish
+        if: steps.changesets.outputs.hasChangesets == 'false'
+        # You can do something when a publish should happen.
+        run: pnpm packages:publish
 
       # - name: Send a Slack notification if a publish happens
       #   if: steps.changesets.outputs.published == 'true'
