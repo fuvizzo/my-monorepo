@@ -1,5 +1,14 @@
 # zenit
 
+## 0.0.14
+
+### Patch Changes
+
+- 51e465a: desc
+- Updated dependencies [bc3ed22]
+- Updated dependencies [51e465a]
+  - @fuvizzo/shared-ui@2.1.1
+
 ## 0.0.13
 
 ### Patch Changes
