@@ -46,7 +46,7 @@ jobs:
           #   version: pnpm ci:version
           commit: "chore: update versions"
           title: "[NO JIRA] Release - update versions"
-          publish: pnpm --filter "./packages/**" publish #we can use also pnpm publish -r
+          publish: pnpm packages:publish #we can use also pnpm publish -r
 
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
