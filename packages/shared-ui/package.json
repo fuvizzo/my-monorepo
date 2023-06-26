@@ -1,5 +1,5 @@
 {
-  "name": "shared-ui",
+  "name": "@fuvizzo/shared-ui",
   "type": "module",
   "files": [
     "dist"

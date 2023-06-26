@@ -11,6 +11,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "shared-ui": "workspace:*"
+    "@fuvizzo/shared-ui": "workspace:*"
   }
 }
