@@ -42,15 +42,11 @@ jobs:
       - name: Build Packages
         run: pnpm --filter "./packages/**" build:prod
         env:
-          CI: false  
+          CI: false     
 
       - name: Creating .npmrc
         run: |
-          cat << EOF > "$GITHUB_WORKSPACE/.npmrc"
-            @fuvizzo:registry=https://npm.pkg.github.com
-            //npm.pkg.github.com/:_authToken=$NPM_TOKEN
-            always-auth=true
-          EOF
+          echo -e " @fuvizzo:registry=https://npm.pkg.github.com \n//npm.pkg.github.com/:_authToken=${{ secrets.NPM_AUTH_TOKEN }} \nalways-auth=true"> .npmrc
         env:          
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}   
 
