@@ -46,12 +46,12 @@ jobs:
 
       - name: Creating .npmrc
         run: |
-          cat << EOF > "$HOME/.npmrc"
+          cat << EOF > "$GITHUB_WORKSPACE/.npmrc"
             @fuvizzo:registry=https://npm.pkg.github.com
             //npm.pkg.github.com/:_authToken=$NPM_TOKEN
             always-auth=true
           EOF
-        env:
+        env:          
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}   
 
       - name: Create Release Pull Request or Publish to npm
