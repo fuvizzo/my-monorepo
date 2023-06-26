@@ -42,14 +42,17 @@ jobs:
       - name: Build Packages
         run: pnpm --filter "./packages/**" build:prod
         env:
-          CI: false     
+          CI: false  
 
-      - name: Creating .npmrc in each packages
+      - name: Creating .npmrc
         run: |
-          bash ${GITHUB_WORKSPACE}/scripts/.npmrc-gen.sh $NPM_TOKEN
-          cd 
-          ls -a ./packages/shared-ui
-        env:          
+          cat << EOF > "$HOME/.npmrc"
+            @fuvizzo:registry=https://npm.pkg.github.com
+            //npm.pkg.github.com/:_authToken=$NPM_TOKEN
+            always-auth=true
+          EOF
+        env:    
+          HOME: ${HOME}      
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}   
 
       - name: Create Release Pull Request or Publish to npm
