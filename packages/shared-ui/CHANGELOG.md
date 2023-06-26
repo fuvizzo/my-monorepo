@@ -1,5 +1,11 @@
 # shared-ui
 
+## 2.0.4
+
+### Patch Changes
+
+- afc9615: desc
+
 ## 2.0.3
 
 ### Patch Changes
