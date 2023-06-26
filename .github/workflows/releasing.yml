@@ -46,7 +46,17 @@ jobs:
 
       - name: Creating .npmrc
         run: |
-          echo -e " @fuvizzo:registry=https://npm.pkg.github.com \n//npm.pkg.github.com/:_authToken=${{ secrets.NPM_AUTH_TOKEN }} \nalways-auth=true"> .npmrc
+          ls -a
+          echo "Home: ${HOME}"
+          echo "GITHUB_WORKFLOW: ${GITHUB_WORKFLOW}"
+          echo "GITHUB_ACTIONS: ${GITHUB_ACTIONS}"
+          echo "GITHUB_ACTOR: ${GITHUB_ACTOR}"
+          echo "GITHUB_REPOSITORY: ${GITHUB_REPOSITORY}"
+          echo "GITHUB_EVENT_NAME: ${GITHUB_EVENT_NAME}"
+          echo "GITHUB_WORKSPACE: ${GITHUB_WORKSPACE}"
+          echo "GITHUB_SHA: ${GITHUB_SHA}"
+          echo "GITHUB_REF: ${GITHUB_REF}"
+          echo -e " @fuvizzo:registry=https://npm.pkg.github.com \n//npm.pkg.github.com/:_authToken=${{ secrets.NPM_AUTH_TOKEN }} \nalways-auth=true"> ${HOME}/.npmrc
         env:          
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}   
 
