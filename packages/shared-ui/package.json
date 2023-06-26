@@ -10,7 +10,7 @@
       "import": "./dist/shared-ui.js"
     }
   },
-  "version": "0.0.0",
+  "version": "2.0.5",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
